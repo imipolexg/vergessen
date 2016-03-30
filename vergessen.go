@@ -299,16 +299,37 @@ func fmtDue(dueTime int64) string {
 	}
 
 	days := int(until / (24 * 60 * 60))
+	durationInt := 0
+	durationNoun := "day"
+	plural := false
+
 	switch {
 	case days > 0 && days < 7:
-		return fmt.Sprintf("%d days", days)
+		if days > 1 {
+			plural = true
+		}
+		durationInt = days
 	case days >= 7 && days <= 365:
 		weeks := days / 7
-		return fmt.Sprintf("%d weeks", weeks)
+		if weeks > 1 {
+			plural = true
+		}
+		durationNoun = "week"
+		durationInt = weeks
 	default:
 		months := days / 30
-		return fmt.Sprintf("%d months", months)
+		if months > 1 {
+			plural = true
+		}
+		durationNoun = "month"
+		durationInt = months
 	}
+
+	if plural {
+		durationNoun += "s"
+	}
+
+	return fmt.Sprintf("%d %s", durationInt, durationNoun)
 }
 
 func cardNumberFromArgs(args []string) (int, error) {
