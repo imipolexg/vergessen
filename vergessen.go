@@ -56,6 +56,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"regexp"
 	"sort"
 	"strconv"
 	"strings"
@@ -270,17 +271,18 @@ func list(d *Deck, args []string) error {
 		fmt.Fprintf(tabwrt, "\t%s", due)
 
 		var prompt string
-		displayLen := 32
+		displayLen := 42
 		if len(card.Prompt) < displayLen {
 			prompt = card.Prompt
 		} else {
 			prompt = card.Prompt[:displayLen] + "..."
 		}
 
-		// Use a regex to do this in a single pass?
-		prompt = strings.Replace(prompt, "\n", " ", -1)
-		prompt = strings.Replace(prompt, "\t", " ", -1)
-
+		re, err := regexp.Compile(`\s+`)
+		if err != nil {
+			return err
+		}
+		prompt = re.ReplaceAllString(prompt, " ")
 		fmt.Fprintf(tabwrt, "\t%s\n", prompt)
 	}
 	tabwrt.Flush()
