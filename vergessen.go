@@ -304,6 +304,13 @@ func fmtDue(dueTime int64) string {
 	plural := false
 
 	switch {
+	case days == 0:
+		hours := int(until / (60 * 60))
+		if hours > 0 {
+			plural = true
+		}
+		durationInt = hours
+		durationNoun = "hour"
 	case days > 0 && days < 7:
 		if days > 1 {
 			plural = true
