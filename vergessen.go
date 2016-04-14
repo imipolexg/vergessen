@@ -107,13 +107,14 @@ type Command struct {
 }
 
 var cmds map[string]Command = map[string]Command{
-	"study": {study, "study all due cards."},
-	"list":  {list, "list all cards in the deck."},
-	"quit":  {quit, "quit"},
-	"new":   {newCard, "create a new card"},
 	"del":   {delCard, "delete a card by id"},
-	"edit":  {editCard, "edit a card"},
 	"due":   {dueCards, "see the cards due"},
+	"edit":  {editCard, "edit a card"},
+	"list":  {list, "list all cards in the deck."},
+	"new":   {newCard, "create a new card"},
+	"quit":  {quit, "quit"},
+	"show":  {showCard, "show a card's prompt and answer"},
+	"study": {study, "study all due cards."},
 }
 
 var quitError error = errors.New("Peace!")
@@ -209,6 +210,7 @@ func study(d *Deck, args []string) error {
 			continue
 		}
 
+		fmt.Print("\n")
 		fmt.Println(card.Prompt)
 		_, err := getInput("Press ENTER to see the ANSWER")
 		if err != nil {
@@ -350,6 +352,25 @@ func cardNumberFromArgs(args []string) (int, error) {
 	}
 
 	return num, nil
+}
+
+func showCard(d *Deck, args []string) error {
+	id, err := cardNumberFromArgs(args)
+	if err != nil {
+		return err
+	}
+
+	if id > len(d.Cards)-1 || id < 0 {
+		return errors.New("Invalid card id")
+	}
+
+	c := d.Cards[id]
+	fmt.Println("PROMPT\n")
+	fmt.Println(c.Prompt)
+	fmt.Println("ANSWER\n")
+	fmt.Println(c.Answer)
+
+	return nil
 }
 
 func delCard(d *Deck, args []string) error {
