@@ -44,8 +44,7 @@ package main
 // I(4) = I(3) * 2.5 - 0.8 etc., which means we have to expand the calculation
 // for all the preceding intervals
 //
-// NOTE: The default EF has been changed to 1.75 instead of 2.5 and will be
-// NOTE: user configurable
+// NOTE: The default EF has been changed to 1.75 instead of 2.5
 
 import (
 	"bufio"
